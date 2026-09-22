@@ -43,3 +43,19 @@ cd client && npm install && npm start
 
 No IP addresses, device identifiers, or account data are ever persisted —
 cases are identified solely by their anonymous tracking token.
+
+## Deploying (single Vercel project)
+
+The repo is set up to deploy as **one Vercel project** — no separate backend host needed:
+
+- `api/index.js` wraps the Express app (`server/app.js`) as a Vercel serverless function.
+- `vercel.json` builds `client/` as a static React app and routes `/api/*` to the function, everything else to the built frontend.
+
+To deploy:
+
+1. Push this repo to GitHub (already done if you're reading this from the repo).
+2. In Vercel, **Add New Project** → import the repo.
+3. Leave **Root Directory** as the repo root (do *not* set it to `client`) — `vercel.json` handles both halves.
+4. No environment variables are required. Deploy.
+
+**Caveat:** the in-memory data store is not durable on serverless — each cold start / concurrent function instance gets a fresh copy, so case data won't reliably persist between requests in production. Fine for demoing single flows; for real persistence, run `server/` on a normal Node host (Render, Railway, etc.) instead, or swap in a real database.

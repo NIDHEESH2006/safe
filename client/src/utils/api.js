@@ -3,11 +3,11 @@
  * component free of raw fetch/error-handling boilerplate.
  */
 
-// In local dev, CRA's "proxy" field in package.json forwards /api to the
-// backend. In production there is no proxy, so a deployed frontend needs to
-// be told the backend's real URL via REACT_APP_API_URL (set in Vercel's
-// project settings) — falling back to the relative path for same-origin
-// deployments.
+// Same-origin by default: in local dev, CRA's "proxy" field forwards /api to
+// the backend; in the single-project Vercel deployment, vercel.json routes
+// /api/* to the serverless function alongside this static build, so the
+// relative path just works with no configuration. REACT_APP_API_URL is only
+// needed if the backend is ever hosted on a separate origin instead.
 const BASE = `${process.env.REACT_APP_API_URL || ''}/api`;
 
 async function request(path, options = {}) {
