@@ -3,7 +3,12 @@
  * component free of raw fetch/error-handling boilerplate.
  */
 
-const BASE = '/api';
+// In local dev, CRA's "proxy" field in package.json forwards /api to the
+// backend. In production there is no proxy, so a deployed frontend needs to
+// be told the backend's real URL via REACT_APP_API_URL (set in Vercel's
+// project settings) — falling back to the relative path for same-origin
+// deployments.
+const BASE = `${process.env.REACT_APP_API_URL || ''}/api`;
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
